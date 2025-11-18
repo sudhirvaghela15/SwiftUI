@@ -48,26 +48,21 @@ struct ContentView: View {
 		}.imageScale(.large)
 		.font(.largeTitle)
 	}
+	
+	func cardCountAdujuster(by offset: Int, symbol: String) -> some View {
+		Button(action: {
+			count += offset
+		}) {
+			Image(systemName: symbol)
+		}.disabled(count + offset < 1 || count + offset > emojis.count)
+	}
 
 	var cardRemover: some View {
-		Button(action: {
-			if count > 0 {
-				count -= 1
-			}
-		}) {
-			Image(systemName: "rectangle.stack.badge.minus.fill")
-		}
+		cardCountAdujuster(by: -1, symbol: "rectangle.stack.badge.minus.fill")
 	}
 	
 	var cardAdder: some View {
-		Button(action: {
-			let emojiCount = emojis.count
-
-			guard count < emojiCount else { return }
-			count += 1
-		}) {
-			Image(systemName: "rectangle.stack.badge.plus.fill")
-		}
+		cardCountAdujuster(by: +1, symbol: "rectangle.stack.badge.plus.fill")
 	}
 }
 
