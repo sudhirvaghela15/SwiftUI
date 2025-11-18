@@ -18,40 +18,57 @@ struct ContentView: View {
     var body: some View {
 		VStack {
 
-			HStack {
-				ForEach(0..<count, id: \.self, content: {
-					CardView(content: emojis[$0])
-				})
-			}
-			.foregroundStyle(.orange)
+			cards
 			
 			Spacer()
 			
-			HStack(alignment: .bottom) {
-				Button(action: {
-					if count > 0 {
-						count -= 1
-					}
-				}) {
-					Image(systemName: "rectangle.stack.badge.minus.fill")
-				}
-				
-				Spacer()
-				
-				Button(action: {
-					let emojiCount = emojis.count
-	
-					guard count < emojiCount else { return }
-					count += 1
-				}) {
-					Image(systemName: "rectangle.stack.badge.plus.fill")
-				}
-			}.imageScale(.large)
-			.font(.largeTitle)
+			cardCountAdjusters
+			
 		}
 		.padding()
 		
     }
+	
+	var cards: some View {
+		HStack {
+		   ForEach(0..<count, id: \.self, content: {
+			   CardView(content: emojis[$0])
+		   })
+		}
+		.foregroundStyle(.orange)
+	}
+	
+	var cardCountAdjusters: some View {
+		HStack(alignment: .bottom) {
+			cardRemover
+			
+			Spacer()
+			
+			cardAdder
+		}.imageScale(.large)
+		.font(.largeTitle)
+	}
+
+	var cardRemover: some View {
+		Button(action: {
+			if count > 0 {
+				count -= 1
+			}
+		}) {
+			Image(systemName: "rectangle.stack.badge.minus.fill")
+		}
+	}
+	
+	var cardAdder: some View {
+		Button(action: {
+			let emojiCount = emojis.count
+
+			guard count < emojiCount else { return }
+			count += 1
+		}) {
+			Image(systemName: "rectangle.stack.badge.plus.fill")
+		}
+	}
 }
 
 struct CardView: View {
