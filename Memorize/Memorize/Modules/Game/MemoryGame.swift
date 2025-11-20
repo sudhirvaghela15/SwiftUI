@@ -7,9 +7,10 @@
 
 import Foundation
 
-struct MemoryGame<CardContent> {
+struct MemoryGame<CardContent: Hashable> {
 	private(set) var cards: [Card]
 	
+		
 	init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
 		self.cards = []
 		//add numbers of pairs cards x 2 cards
@@ -21,22 +22,39 @@ struct MemoryGame<CardContent> {
 		}
 	}
 	
+	var indexOfTheOneAndOnlyFaceUpCard: Int? 
+	
+	mutating func choose(_ card: Card) {
+		debugPrint("Choose",card)
+		if let cardIndex = cards.firstIndex(where: { $0.id == card.id }) {
+			if !cards[cardIndex].isFaceUp && !cards[cardIndex].isMatch {
+				if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+					if cards[cardIndex].content == cards[potentialMatchIndex].content {
+						cards[cardIndex].isMatch = true
+						cards[potentialMatchIndex].isMatch = true
+					}
+					indexOfTheOneAndOnlyFaceUpCard = nil
+				} else {
+					for index in cards.indices {
+						cards[index].isFaceUp = false
+					}
+					indexOfTheOneAndOnlyFaceUpCard = cardIndex
+				}
+				cards[cardIndex].isFaceUp = true
+			}
+		}
+	}
+	
 	mutating func shuffle() {
 		cards.shuffle()
 	}
 	
-	func choose(_ card: Card) {
-		
-	}
-	
-	struct Card: Equatable {
-		private let id = UUID()
-		var isFaceUp: Bool = true
+	struct Card: Equatable, Identifiable {
+		let id = UUID()
+		var isFaceUp: Bool = false
 		var isMatch: Bool = false
 		let content: CardContent
-		
-		static func == (lhs: Card, rhs: Card) -> Bool {
-			return lhs.id == rhs.id
-		}
 	}
 }
+
+

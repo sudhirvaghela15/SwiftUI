@@ -33,10 +33,13 @@ struct EmojiMemoryGameView: View {
 			columns: [GridItem(.adaptive(minimum: 85), spacing: 0)],
 			spacing: 0
 		) {
-			ForEach(viewModel.cards.indices, id: \.self, content: {
-			   CardView(viewModel.cards[$0])
+			ForEach(viewModel.cards, content: { card in
+			   CardView(card)
 				   .aspectRatio(2/3, contentMode: .fit)
 				   .padding(4)
+				   .onTapGesture { _ in
+					   viewModel.choose(card)
+				   }
 		   })
 		}
 		.foregroundStyle(.orange)
@@ -66,7 +69,7 @@ struct CardView: View {
 			}.opacity(card.isFaceUp ? 1 : 0)
 			
 			roundRect.opacity(card.isFaceUp ? 0 : 1)
-		}
+		}.opacity(card.isFaceUp || !card.isMatch ? 1 : 0)
 	}
 }
 
