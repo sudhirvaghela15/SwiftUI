@@ -16,6 +16,8 @@ struct EmojiMemoryGameView: View {
 		VStack {
 			ScrollView(.vertical) {
 				cards
+					.animation(.default, value: viewModel.cards)
+					
 			}.overlay(alignment: .bottomTrailing, content: {
 				Button(action: viewModel.shuffle, label: {
 				 Text("Shuffle")

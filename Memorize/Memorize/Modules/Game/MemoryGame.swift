@@ -29,9 +29,14 @@ struct MemoryGame<CardContent> {
 		
 	}
 	
-	struct Card {
+	struct Card: Equatable {
+		private let id = UUID()
 		var isFaceUp: Bool = true
 		var isMatch: Bool = false
 		let content: CardContent
+		
+		static func == (lhs: Card, rhs: Card) -> Bool {
+			return lhs.id == rhs.id
+		}
 	}
 }
