@@ -50,7 +50,7 @@ struct MemoryGame<CardContent: Hashable> {
 	
 	struct Card: Equatable, Identifiable {
 		let id = UUID()
-		var isFaceUp: Bool = false
+		var isFaceUp: Bool = true
 		var isMatch: Bool = false
 		let content: CardContent
 	}

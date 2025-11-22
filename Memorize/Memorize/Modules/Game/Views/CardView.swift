@@ -16,23 +16,20 @@ struct CardView: View {
 	}
 	
 	var body: some View {
-		ZStack {
-			let roundRect = RoundedRectangle(
-				cornerRadius: Constant.cornerRadius
-			)
-			
-			Group {
-				roundRect.fill(.white)
-				roundRect.strokeBorder(lineWidth: Constant.lineWidth)
+		
+		Pie(endAngle: .degrees(240))
+			.opacity(Constant.Pie.opacity)
+			.overlay {
 				Text(card.content)
 					.font(.system(size: Constant.FontSize.largetst))
 					.minimumScaleFactor(Constant.FontSize.scaleFactor)
 					.fontWeight(.bold)
 					.aspectRatio(1, contentMode: .fit)
-			}.opacity(card.isFaceUp ? 1 : 0)
-			
-			roundRect.opacity(card.isFaceUp ? 0 : 1)
-		}.opacity(card.isFaceUp || !card.isMatch ? 1 : 0)
+					.padding(Constant.Pie.inset)
+				
+			}.padding(Constant.inset)
+			.cardify(card.isFaceUp)
+			.hide(!(card.isFaceUp || !card.isMatch))
 	}
 }
 
@@ -46,6 +43,11 @@ private extension CardView {
 			static let largetst: CGFloat = 200
 			static let smallets: CGFloat = 10
 			static let scaleFactor: CGFloat = smallets / largetst
+		}
+		
+		enum Pie {
+			static let inset: CGFloat  = 5
+			static let opacity: CGFloat = 0.4
 		}
 	}
 }
