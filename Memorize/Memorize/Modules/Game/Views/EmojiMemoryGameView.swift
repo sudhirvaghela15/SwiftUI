@@ -11,39 +11,35 @@ struct EmojiMemoryGameView: View {
 	
 //	@State var viewModel: EmojiMemoryGame = .init()
 	var viewModel: EmojiMemoryGame
+	private let aspectRatio: CGFloat = 2/3
 	
     var body: some View {
+	
 		VStack {
-			ScrollView(.vertical) {
-				cards
-					.animation(.default, value: viewModel.cards)
-					
-			}.overlay(alignment: .bottomTrailing, content: {
-				Button(action: viewModel.shuffle, label: {
-				 Text("Shuffle")
-			 })
-		 })
+			cards
+				.animation(.default, value: viewModel.cards)
+			Button(action: viewModel.shuffle, label: {
+				Text("Shuffle")
+			})
 		}
 		.padding()
 		
     }
 	
-	var cards: some View {
-		LazyVGrid(
-			columns: [GridItem(.adaptive(minimum: 85), spacing: 0)],
-			spacing: 0
-		) {
-			ForEach(viewModel.cards, content: { card in
-			   CardView(card)
-				   .aspectRatio(2/3, contentMode: .fit)
-				   .padding(4)
-				   .onTapGesture { _ in
-					   viewModel.choose(card)
-				   }
-		   })
-		}
+	@ViewBuilder
+	private var cards: some View {
+		AspectVGrid(
+			items: viewModel.cards,
+			aspectRatio: aspectRatio,
+			content: { card in
+				CardView(card)
+					.padding(4)
+					.onTapGesture { _ in viewModel.choose(card) }
+			})
 		.foregroundStyle(.orange)
 	}
+	
+	
 }
 
 struct CardView: View {
