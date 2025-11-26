@@ -10,7 +10,7 @@ import SwiftUI
 struct EmojiMemoryGameView: View {
 	
 //	@State var viewModel: EmojiMemoryGame = .init()
-	var viewModel: EmojiMemoryGame
+	@Bindable var viewModel: EmojiMemoryGame
 	private let aspectRatio: CGFloat = 2/3
 	private let spacing: CGFloat = 4
 	
@@ -18,9 +18,12 @@ struct EmojiMemoryGameView: View {
 	
 		VStack {
 			cards
-				.animation(.default, value: viewModel.cards)
 				.foregroundStyle(viewModel.color)
-			Button(action: viewModel.shuffle, label: {
+			Button(action: {
+				withAnimation {
+					viewModel.shuffle()
+				}
+			}, label: {
 				Text("Shuffle")
 			})
 		}
@@ -36,7 +39,11 @@ struct EmojiMemoryGameView: View {
 			content: { card in
 				CardView(card)
 					.padding(spacing)
-					.onTapGesture { _ in viewModel.choose(card) }
+					.onTapGesture { _ in
+						withAnimation {
+							viewModel.choose(card)
+						}
+					}
 			})
 	}
 }
