@@ -10,38 +10,53 @@ import SwiftUI
 struct EmojiMemoryGameView: View {
 	
 //	@State var viewModel: EmojiMemoryGame = .init()
-	@Bindable var viewModel: EmojiMemoryGame
+	@Bindable var emojiMemoryGame: EmojiMemoryGame
 	private let aspectRatio: CGFloat = 2/3
 	private let spacing: CGFloat = 4
 	
     var body: some View {
 	
 		VStack {
-			cards
-				.foregroundStyle(viewModel.color)
-			Button(action: {
-				withAnimation {
-					viewModel.shuffle()
-				}
-			}, label: {
-				Text("Shuffle")
-			})
+			cards.foregroundStyle(emojiMemoryGame.color)
+			bottomBar
 		}
 		.padding()
 		
     }
 	
+	private  var bottomBar: some View {
+		HStack {
+			scoreView
+			Spacer()
+			shuffleView
+		}.font(.largeTitle)
+	}
+	private var scoreView: some View {
+		Text("Scor: \(emojiMemoryGame.score)")
+			.animation(nil)
+	}
+	
+	private var shuffleView: some View {
+		Button(action: {
+			withAnimation {
+				emojiMemoryGame.shuffle()
+			}
+		}, label: {
+			Text("Shuffle")
+		})
+	}
+	
 	@ViewBuilder
 	private var cards: some View {
 		AspectVGrid(
-			items: viewModel.cards,
+			items: emojiMemoryGame.cards,
 			aspectRatio: aspectRatio,
 			content: { card in
 				CardView(card)
 					.padding(spacing)
 					.onTapGesture { _ in
 						withAnimation {
-							viewModel.choose(card)
+							emojiMemoryGame.choose(card)
 						}
 					}
 			})
@@ -50,5 +65,5 @@ struct EmojiMemoryGameView: View {
 
 #Preview {
 	@Previewable @State var viewModel: EmojiMemoryGame = .init()
-	EmojiMemoryGameView(viewModel: viewModel)
+	EmojiMemoryGameView(emojiMemoryGame: viewModel)
 }

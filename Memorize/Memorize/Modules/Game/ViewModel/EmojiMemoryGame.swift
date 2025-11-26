@@ -25,22 +25,26 @@ class EmojiMemoryGame {
 	}
 	
 //	@ObservationIgnored
-	private var model: MemoryGame = createMemoryGame()
+	private var game: MemoryGame = createMemoryGame()
 	
 	var cards: [MemoryGame<String>.Card] {
-		model.cards
+		game.cards
 	}
 	
 	var color: Color {
 		.orange
 	}
 	
+	var score: Int {
+		game.score
+	}
+	
 	// MARK: - Intents
 	
 	func shuffle() {
-		model.shuffle()
+		game.shuffle()
 	}
 	func choose(_ card: MemoryGame<String>.Card) {
-		model.choose(card)
+		game.choose(card)
 	}
 }
