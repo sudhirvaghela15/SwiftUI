@@ -59,7 +59,7 @@ struct MemoryGame<CardContent: Hashable> {
 	}
 	
 	struct Card: Equatable, Identifiable {
-		let id = UUID()
+		let id = UUID().uuidString
 		var isFaceUp: Bool = false {
 			didSet {
 				hasBeenSeen = oldValue && !isFaceUp

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
-	
+	typealias Card = MemoryGame<String>.Card
 //	@State var viewModel: EmojiMemoryGame = .init()
 	@Bindable var emojiMemoryGame: EmojiMemoryGame
 	private let aspectRatio: CGFloat = 2/3
@@ -54,12 +54,26 @@ struct EmojiMemoryGameView: View {
 			content: { card in
 				CardView(card)
 					.padding(spacing)
+					.overlay(
+						FlayingNumber(number: scoreChange(causeBy: card))
+					)
 					.onTapGesture { _ in
 						withAnimation {
+							let scoreBeforeChoosing = emojiMemoryGame.score
 							emojiMemoryGame.choose(card)
+							let scoreChange = emojiMemoryGame.score - scoreBeforeChoosing
+							self.lastScoreChange = (scoreChange, causedByID: card.id)
 						}
 					}
 			})
+	}
+	
+	
+	@State private var lastScoreChange = (0, causedByID: "")
+	
+	private func scoreChange(causeBy card: Card) -> Int {
+		let (amount, id) = lastScoreChange
+		return card.id == id ? amount : 0
 	}
 }
 
