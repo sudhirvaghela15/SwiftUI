@@ -9,11 +9,22 @@ import SwiftUI
 
 struct AspectVGrid<Item: Identifiable, Content: View>: View {
 	let items: [Item]
-	var aspectRatio: CGFloat = 1
-	var contentMode: ContentMode = .fit
+	let aspectRatio: CGFloat
+	let contentMode: ContentMode
 	
-	@ViewBuilder
-	let content: (Item) -> Content
+	private let content: (Item) -> Content
+	
+	init(
+		items: [Item],
+		aspectRatio: CGFloat = 1,
+		contentMode: ContentMode = .fit,
+		@ViewBuilder content: @escaping (Item) -> Content
+	) {
+		self.items = items
+		self.aspectRatio = aspectRatio
+		self.contentMode = contentMode
+		self.content = content
+	}
 
 	var body: some View {
 		GeometryReader { proxy in

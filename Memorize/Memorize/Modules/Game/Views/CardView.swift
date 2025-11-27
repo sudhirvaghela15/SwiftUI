@@ -16,7 +16,6 @@ struct CardView: View {
 	}
 	
 	var body: some View {
-		
 		Pie(endAngle: .degrees(240))
 			.opacity(Constant.Pie.opacity)
 			.overlay {

@@ -11,13 +11,15 @@ struct EmojiMemoryGameView: View {
 	typealias Card = MemoryGame<String>.Card
 //	@State var viewModel: EmojiMemoryGame = .init()
 	@Bindable var emojiMemoryGame: EmojiMemoryGame
+	@State private var lastScoreChange = (0, causedByID: "")
 	private let aspectRatio: CGFloat = 2/3
 	private let spacing: CGFloat = 4
 	
     var body: some View {
 	
 		VStack {
-			cards.foregroundStyle(emojiMemoryGame.color)
+			cards
+				.foregroundStyle(emojiMemoryGame.color)
 			bottomBar
 		}
 		.padding()
@@ -32,7 +34,7 @@ struct EmojiMemoryGameView: View {
 		}.font(.largeTitle)
 	}
 	private var scoreView: some View {
-		Text("Scor: \(emojiMemoryGame.score)")
+		Text("Score: \(emojiMemoryGame.score)")
 			.animation(nil)
 	}
 	
@@ -46,7 +48,6 @@ struct EmojiMemoryGameView: View {
 		})
 	}
 	
-	@ViewBuilder
 	private var cards: some View {
 		AspectVGrid(
 			items: emojiMemoryGame.cards,
@@ -57,20 +58,21 @@ struct EmojiMemoryGameView: View {
 					.overlay(
 						FlayingNumber(number: scoreChange(causeBy: card))
 					)
+					.zIndex(scoreChange(causeBy: card) != 0 ? 100 : 0)
 					.onTapGesture { _ in
-						withAnimation {
-							let scoreBeforeChoosing = emojiMemoryGame.score
-							emojiMemoryGame.choose(card)
-							let scoreChange = emojiMemoryGame.score - scoreBeforeChoosing
-							self.lastScoreChange = (scoreChange, causedByID: card.id)
-						}
+						choose(card)
 					}
 			})
 	}
 	
-	
-	@State private var lastScoreChange = (0, causedByID: "")
-	
+	private func choose(_ card: Card) {
+		withAnimation {
+			let scoreBeforeChoosing = emojiMemoryGame.score
+			emojiMemoryGame.choose(card)
+			let scoreChange = emojiMemoryGame.score - scoreBeforeChoosing
+			self.lastScoreChange = (scoreChange, causedByID: card.id)
+		}
+	}
 	private func scoreChange(causeBy card: Card) -> Int {
 		let (amount, id) = lastScoreChange
 		return card.id == id ? amount : 0
