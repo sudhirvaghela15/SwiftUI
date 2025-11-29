@@ -10,7 +10,7 @@ import SwiftUI
 
 @Observable
 class EmojiMemoryGame {
-	private static let emojis = ["☠️","😌","🏴‍☠️","🎃", "🦟", "🎥", "📡", " 🦄",]
+	private static let emojis = ["👻","🎃","🕷️","😈","💀","🕸️","🧙‍♀️","🙀","👹","😱","☠️","🍭"]
 	private static func createMemoryGame() -> MemoryGame<String> {
 		.init(
 			numberOfPairsOfCards: 8,

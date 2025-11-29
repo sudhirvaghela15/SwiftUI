@@ -26,7 +26,7 @@ struct EmojiMemoryGameView: View {
 		
     }
 	
-	private  var bottomBar: some View {
+	private var bottomBar: some View {
 		HStack {
 			scoreView
 			Spacer()
@@ -51,18 +51,16 @@ struct EmojiMemoryGameView: View {
 	private var cards: some View {
 		AspectVGrid(
 			items: emojiMemoryGame.cards,
-			aspectRatio: aspectRatio,
-			content: { card in
-				CardView(card)
-					.padding(spacing)
-					.overlay(
-						FlayingNumber(number: scoreChange(causeBy: card))
-					)
-					.zIndex(scoreChange(causeBy: card) != 0 ? 100 : 0)
-					.onTapGesture { _ in
-						choose(card)
-					}
-			})
+			aspectRatio: aspectRatio
+		) { card in
+			CardView(card)
+				   .padding(spacing)
+				   .overlay(FlayingNumber(number: scoreChange(causeBy: card)))
+				   .zIndex(cprint(scoreChange(causeBy: card) != 0 ? 100 : 0))
+				   .onTapGesture { _ in
+					   choose(card)
+				   }
+		   }
 	}
 	
 	private func choose(_ card: Card) {
@@ -73,6 +71,7 @@ struct EmojiMemoryGameView: View {
 			self.lastScoreChange = (scoreChange, causedByID: card.id)
 		}
 	}
+	
 	private func scoreChange(causeBy card: Card) -> Int {
 		let (amount, id) = lastScoreChange
 		return card.id == id ? amount : 0
@@ -82,4 +81,10 @@ struct EmojiMemoryGameView: View {
 #Preview {
 	@Previewable @State var viewModel: EmojiMemoryGame = .init()
 	EmojiMemoryGameView(emojiMemoryGame: viewModel)
+}
+
+
+func cprint<T>(_ value: T) -> T {
+	print(value, " Lo")
+	return value
 }
