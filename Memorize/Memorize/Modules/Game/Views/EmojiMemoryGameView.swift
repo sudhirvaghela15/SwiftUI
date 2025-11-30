@@ -53,14 +53,37 @@ struct EmojiMemoryGameView: View {
 			items: emojiMemoryGame.cards,
 			aspectRatio: aspectRatio
 		) { card in
-			CardView(card)
-				   .padding(spacing)
-				   .overlay(FlayingNumber(number: scoreChange(causeBy: card)))
-				   .zIndex(cprint(scoreChange(causeBy: card) != 0 ? 100 : 0))
-				   .onTapGesture { _ in
-					   choose(card)
-				   }
-		   }
+			if isDelt(card) {
+				CardView(card)
+					   .padding(spacing)
+					   .overlay(FlayingNumber(number: scoreChange(causeBy: card)))
+					   .zIndex(cprint(scoreChange(causeBy: card) != 0 ? 100 : 0))
+					   .onTapGesture { _ in
+						   choose(card)
+					   }
+					   .transition(
+						.offset(
+							x: CGFloat.random(in: -1000...1000),
+							y: CGFloat.random(in: -1000...1000))
+					   )
+			}
+		}.onAppear {
+			withAnimation(.easeInOut(duration: 2)) {
+				for card in emojiMemoryGame.cards {
+					delt.insert(card.id)
+				}
+			}
+		}
+	}
+	
+	@State private var  delt =  Set<Card.ID>()
+	
+	private func isDelt(_ card: Card) -> Bool {
+		delt.contains(card.id)
+	}
+	
+	private var undealtCards: [Card] {
+		emojiMemoryGame.cards.filter({ !isDelt($0) })
 	}
 	
 	private func choose(_ card: Card) {

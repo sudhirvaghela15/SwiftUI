@@ -16,21 +16,29 @@ struct CardView: View {
 	}
 	
 	var body: some View {
-		Pie(endAngle: .degrees(240))
-			.opacity(Constant.Pie.opacity)
-			.overlay {
-				Text(card.content)
-					.font(.system(size: Constant.FontSize.largetst))
-					.minimumScaleFactor(Constant.FontSize.scaleFactor)
-					.fontWeight(.bold)
-					.aspectRatio(1, contentMode: .fit)
-					.padding(Constant.Pie.inset)
-					.rotationEffect(.degrees(card.isMatch ? 360 : 0))
-					.animation(.spin(duration: 1), value: card.isMatch)
-				
-			}.padding(Constant.inset)
-			.cardify(card.isFaceUp)
-			.hide(!(card.isFaceUp || !card.isMatch))
+		TimelineView(.animation) { timeline in
+			if (card.isFaceUp || !card.isMatch) {
+				Pie(endAngle: .degrees(card.bonusPercentRemaining * 360))
+					.opacity(Constant.Pie.opacity)
+					.overlay (cardContex.padding(Constant.Pie.inset))
+					.padding(Constant.inset)
+					.cardify(card.isFaceUp)
+					.transition(.scale)
+					//.hide(!(card.isFaceUp || !card.isMatch))
+			} else {
+				Color.clear
+			}
+		}
+	}
+	
+	private var cardContex: some View {
+		Text(card.content)
+			.font(.system(size: Constant.FontSize.largetst))
+			.minimumScaleFactor(Constant.FontSize.scaleFactor)
+			.fontWeight(.bold)
+			.aspectRatio(1, contentMode: .fit)
+			.rotationEffect(.degrees(card.isMatch ? 360 : 0))
+			.animation(.spin(duration: 1), value: card.isMatch)
 	}
 }
 

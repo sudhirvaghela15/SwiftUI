@@ -36,7 +36,7 @@ struct MemoryGame<CardContent: Hashable> {
 					if cards[cardIndex].content == cards[potentialMatchIndex].content {
 						cards[cardIndex].isMatch = true
 						cards[potentialMatchIndex].isMatch = true
-						score += 2
+						score += 2 + cards[cardIndex].bonus + cards[potentialMatchIndex].bonus
 					} else {
 						if cards[cardIndex].hasBeenSeen {
 							score -= 1
@@ -62,12 +62,26 @@ struct MemoryGame<CardContent: Hashable> {
 		let id = UUID().uuidString
 		var isFaceUp: Bool = false {
 			didSet {
+				
+				if isFaceUp {
+					startUsingBonusTime()
+				} else {
+					stopUsingBonusTime()
+				}
+				
 				hasBeenSeen = oldValue && !isFaceUp
 			}
 		}
 		
 		var hasBeenSeen: Bool = false
-		var isMatch: Bool = false
+		var isMatch: Bool = false {
+			didSet {
+				if isMatch {
+					stopUsingBonusTime()
+				}
+			}
+		}
+		 
 		let content: CardContent
 		
 			// MARK: - Bonus Time
