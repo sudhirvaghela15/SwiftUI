@@ -31,3 +31,13 @@ extension CGOffset {
 		lhs = lhs + rhs
 	}
 }
+
+extension String {
+	var uniqued: String {
+		reduce(into: "") { sofar, element in
+			if !sofar.contains(element) {
+				sofar.append(element)
+			}
+		}
+	}
+}
